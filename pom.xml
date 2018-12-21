@@ -16,11 +16,17 @@
 	</properties>
 
     	<repositories>
-        	<repository>
+		<repository>
+			<id>gtaun-local-repo</id>
+			<name>GTAUN Local Repository</name>
+			<url>file://d:/maven/repo/net/gtaun/</url>
+		</repository>
+		
+<!--        	<repository>
             		<id>gtaun-public-repo</id>
             		<name>GTAUN Public Repository</name>
             		<url>http://repo.sampx.ru/repository/maven-public/</url>
-       		</repository>
+       		</repository> -->
     	</repositories>
 	
 	<licenses>
