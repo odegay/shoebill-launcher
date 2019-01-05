@@ -9,25 +9,28 @@
 
 	<name>Shoebill Launcher</name>
 	<description>Shoebill Launcher</description>
-	<url>https://github.com/Shoebill</url>
+	<url>https://github.com/odegay</url>
 	
 	<properties>
+        <java.version>1.8</java.version>	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+   		<github.global.server>github</github.global.server>
+        <github.maven-plugin>0.12</github.maven-plugin>
 	</properties>
 
-    	<repositories>
-		<repository>
-			<id>gtaun-local-repo</id>
-			<name>GTAUN Local Repository</name>
-			<url>file://d:/maven/repo/net/gtaun/</url>
-		</repository>
-		
-<!--        	<repository>
-            		<id>gtaun-public-repo</id>
-            		<name>GTAUN Public Repository</name>
-            		<url>http://repo.sampx.ru/repository/maven-public/</url>
-       		</repository> -->
-    	</repositories>
+   	<repositories>
+
+	<repository>
+		<id>oxotarp-mvn-repo</id>
+		<url>https://raw.github.com/odegay/OxotaRP_Arts/mvn-repo/</url>
+		<snapshots>
+			<enabled>true</enabled>
+			<updatePolicy>always</updatePolicy>
+		</snapshots>
+	</repository>                       
+
+
+   	</repositories>
 	
 	<licenses>
 		<license>
@@ -37,31 +40,13 @@
 	</licenses>
 	
 	<scm>
-		<url>https://github.com/Shoebill/shoebill-launcher</url>
-		<connection>https://github.com/Shoebill/shoebill-launcher.git</connection>
-		<developerConnection>scm:git:git@github.com:Shoebill/shoebill-launcher.git</developerConnection>
+		<url>https://github.com/odegay/shoebill-launcher</url>
+		<connection>https://github.com/odegay/shoebill-launcher.git</connection>
+		<developerConnection>scm:git:git@github.com:odegay/shoebill-launcher.git</developerConnection>
 	</scm>
 
+<!--
 	<developers>
-		<developer>
-			<name>MK124</name>
-			<id>MK124</id>
-			<url>https://github.com/mk124</url>
-			<email>mk124a@gmail.com</email>
-			<organization>Shoebill</organization>
-			<organizationUrl>https://github.com/Shoebill</organizationUrl>
-			<timezone>+8</timezone>
-		</developer>
-
-		<developer>
-			<name>123marvin123</name>
-			<id>123marvin123</id>
-			<url>https://github.com/123marvin123</url>
-			<email>catboy560@gmail.com</email>
-			<organization>Shoebill</organization>
-			<organizationUrl>https://github.com/Shoebill</organizationUrl>
-			<timezone>+1</timezone>
-		</developer>
 	</developers>
 
 	<distributionManagement>
@@ -76,21 +61,51 @@
             		<url>http://repo.sampx.ru/repository/maven-snapshots/</url>
         	</snapshotRepository>
     	</distributionManagement>
+-->
 
+<!--
 	<ciManagement>
 		<system>jenkins</system>
 		<url>http://ci.gtaun.net</url>
 	</ciManagement>
+-->
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/Shoebill/shoebill-launcher/issues</url>
+		<url>https://github.com/odegay/shoebill-launcher/issues</url>
 	</issueManagement>
+
+	<dependencies>
+        <dependency>
+            <groupId>net.gtaun</groupId>
+            <artifactId>shoebill-runtime</artifactId>
+            <version>2.0-RC</version>
+        </dependency>
+	</dependencies>
 
 	<build>
 		<defaultGoal>clean install</defaultGoal>
 
 		<plugins>
+<!--
+		    <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                    <goal>single</goal>
+                    </goals>
+                </execution>
+                </executions>
+                <configuration>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+                </configuration>
+            </plugin>
+-->
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -100,6 +115,39 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.1</version>
+                <configuration>
+                    <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>${github.maven-plugin}</version>
+                <configuration>
+                    <message>Maven artifacts for ${project.version}</message>
+                    <merge>true</merge>
+                    <noJekyll>true</noJekyll>
+                    <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
+                    <branch>refs/heads/mvn-repo</branch>
+                    <includes><include>**/*</include></includes>
+                    <repositoryName>OxotaRP_Arts</repositoryName>
+                    <repositoryOwner>odegay</repositoryOwner>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                    </execution>
+                </executions>
+            </plugin>   
+
 		</plugins>
 	</build>
 

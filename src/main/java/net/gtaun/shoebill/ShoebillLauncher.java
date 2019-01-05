@@ -1,9 +1,12 @@
 package net.gtaun.shoebill;
 
+import java.io.*;
+/*
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.InputStreamReader;
+import java.io.InputStream;*/
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,6 +16,8 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import net.gtaun.shoebill.ShoebillImpl;
+//import net.gtaun.shoebill.*;
 
 public class ShoebillLauncher
 {
@@ -40,6 +45,7 @@ public class ShoebillLauncher
 			String implClass = reader.readLine();
 			reader.close();
 
+			implClass = "net.gtaun.shoebill.dependency.ShoebillDependencyManager";
 			Class<?> clz = classLoader.loadClass(implClass);
 			Method method = clz.getMethod("resolveDependencies");
 
@@ -59,15 +65,34 @@ public class ShoebillLauncher
 	{
 		Map<String, Object> properties = Map.class.cast(context);
 		List<File> files = List.class.cast(properties.get(PROPERTY_JAR_FILES));
-
 		assert files != null;
 		URLClassLoader classLoader = createUrlClassLoader(files.toArray(new File[files.size()]), ClassLoader.getSystemClassLoader());
 		
-		BufferedReader reader = new BufferedReader(new InputStreamReader(classLoader.getResourceAsStream("shoebillImpl.txt")));
-		String implClass = reader.readLine();
-		reader.close();
-		
+//		System.out.println(classLoader.toString());
+		//DEBUG
+		String implClass = "net.gtaun.shoebill.ShoebillImpl";
+		//ShoebillImpl test = new ShoebillImpl(amxHandles);
+		//DEBUG
+
+/*		try
+		{			
+			InputStream inputStream = classLoader.getResourceAsStream("shoebillImpl.txt");	
+			System.out.println("1 passed");
+			InputStreamReader streamReader = new InputStreamReader(inputStream);
+			System.out.println("2 passed");
+			BufferedReader reader = new BufferedReader(streamReader);
+			System.out.println("3 passed");
+			implClass = reader.readLine();
+			reader.close();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Launcher Error: Some issued with shoebilliml.txt");
+			throw e;
+		}*/
+				
 		Class<?> clz = classLoader.loadClass(implClass);
+		
 		
 		try
 		{
@@ -83,6 +108,7 @@ public class ShoebillLauncher
 		{
 			throw e.getTargetException();
 		}
+		
 	}
 	
 	private static URLClassLoader createUrlClassLoader(File[] files, ClassLoader parent)
